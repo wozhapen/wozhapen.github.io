@@ -1,6 +1,6 @@
 var hasPushstate = !!(window.history && history.pushState);
 // duoshuo load function
-var duoshuoName = 'yuche'; // change to your DUOSHUO name
+var duoshuoName = 'daxiongdexiaowu'; // change to your DUOSHUO name
 var duoshuoQuery = {short_name: duoshuoName}; // change to your duoshuo name
 function toggleDuoshuoComments(container) {
     var el = document.createElement('div');
@@ -97,11 +97,15 @@ function  duoshuoInlineComment(){
         $(".post-content").filter('.right').removeClass('right');
     });
 
-    $('.inline-comment').click(function(){
-        event.stopPropagation();
+    // $('.inline-comment').click(function(){
+    //     event.stopPropagation();
 
-    })
+    // })
 
+    $('.inline-comment').onclick=function(e){
+        e=e||windows.event;
+        e.stopPropagation();
+    }
 
     var hideInlineComment = function(trigger,comment) {
 
