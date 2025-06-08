@@ -95,6 +95,11 @@ def convert_md_to_html(md_path, output_dir, input_root, nav_manager):
     # 构建输出路径
     html_path = output_dir / rel_path.with_suffix('.html')
     html_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # 计算 asset 目录的相对路径
+    asset_rel_path = os.path.relpath(output_dir / "asset", html_path.parent)
+    favicon_path = os.path.join(asset_rel_path, "favicon.png")
+    ...
     
     # 生成导航栏
     navbar = nav_manager.generate_navbar(html_path)
@@ -105,7 +110,7 @@ def convert_md_to_html(md_path, output_dir, input_root, nav_manager):
 <head>
     <meta charset="UTF-8">
     <title>{html.escape(title)}</title>
-    <link rel="icon" href="asset/favicon.jpg" type="image/jpeg">
+    <link rel="icon" href="{favicon_path}" type="image/jpeg">
     <style>{CSS_STYLE}</style>
 </head>
 <body>
@@ -165,13 +170,17 @@ def generate_directory_first_index(directory, output_dir, root_dir, input_root, 
     
     navbar = nav_manager.generate_navbar(index_path)
     file_list_str = '\n            '.join(file_list)
+
+    # 计算 asset 目录的相对路径
+    asset_rel_path = os.path.relpath(output_dir / "asset", directory)
+    favicon_path = os.path.join(asset_rel_path, "favicon.png")
     
     index_html = f"""<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>所有文章</title>
-    <link rel="icon" href="asset/favicon.jpg" type="image/jpeg">
+    <link rel="icon" href="{favicon_path}" type="image/jpeg">
     <style>{CSS_STYLE}</style>
 </head>
 <body>
@@ -260,12 +269,16 @@ def generate_directory_sub_index(directory, output_dir, root_dir, input_root, na
     
     file_list_str = '\n            '.join(file_list)
 
+    # 计算 asset 目录的相对路径
+    asset_rel_path = os.path.relpath(output_dir / "asset", directory)
+    favicon_path = os.path.join(asset_rel_path, "favicon.png")
+
     index_html = f"""<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>{page_title}</title>
-    <link rel="icon" href="asset/favicon.jpg" type="image/jpeg">
+    <link rel="icon" href="{favicon_path}" type="image/jpeg">
     <style>{CSS_STYLE}</style>
 </head>
 <body>
