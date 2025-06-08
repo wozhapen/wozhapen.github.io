@@ -9,7 +9,7 @@ import shutil
 import sys
 import datetime
 
-# 极简 CSS 样式
+# CSS 样式
 CSS_STYLE = """
 body {
   font-family: "Courier New";
@@ -41,6 +41,7 @@ class NavigationManager:
         self.output_dir = pathlib.Path(output_dir).resolve()
         self.top_level_dirs = []
         self.home_link = "index.html"
+        self.about_link = "about.html"
         
     def add_top_level_dir(self, dir_name):
         """添加顶级目录到导航栏"""
@@ -52,6 +53,10 @@ class NavigationManager:
         # 计算首页路径
         home_path = self.output_dir / self.home_link
         home_rel = os.path.relpath(home_path, current_path.parent)
+
+        # 计算about路径
+        about_path = self.output_dir / self.about_link
+        about_rel = os.path.relpath(about_path, current_path.parent)
         
         # 创建目录链接
         dir_links = []
@@ -62,8 +67,9 @@ class NavigationManager:
         
         return f"""
         <div class="navbar">
-            <a href="{home_rel}">首页</a> | 
+            <a href="{home_rel}">Home</a> | 
             {' | '.join(dir_links)}
+            | <a href="{about_rel}">About</a>
         </div>"""
 
 def convert_md_to_html(md_path, output_dir, input_root, nav_manager):
@@ -99,6 +105,7 @@ def convert_md_to_html(md_path, output_dir, input_root, nav_manager):
 <head>
     <meta charset="UTF-8">
     <title>{html.escape(title)}</title>
+    <link rel="icon" href="asset/favicon.jpg" type="image/jpeg">
     <style>{CSS_STYLE}</style>
 </head>
 <body>
@@ -164,6 +171,7 @@ def generate_directory_first_index(directory, output_dir, root_dir, input_root, 
 <head>
     <meta charset="UTF-8">
     <title>所有文章</title>
+    <link rel="icon" href="asset/favicon.jpg" type="image/jpeg">
     <style>{CSS_STYLE}</style>
 </head>
 <body>
@@ -257,6 +265,7 @@ def generate_directory_sub_index(directory, output_dir, root_dir, input_root, na
 <head>
     <meta charset="UTF-8">
     <title>{page_title}</title>
+    <link rel="icon" href="asset/favicon.jpg" type="image/jpeg">
     <style>{CSS_STYLE}</style>
 </head>
 <body>
@@ -290,7 +299,7 @@ def copy_asset(output_dir):
     # 获取当前脚本所在目录
     script_dir = pathlib.Path(__file__).parent
     asset_source = script_dir / "asset"
-    asset_target = pathlib.Path(output_dir) / "assert" 
+    asset_target = pathlib.Path(output_dir) / "asset" 
     
     if asset_source.exists():
         if asset_target.exists():
@@ -299,6 +308,7 @@ def copy_asset(output_dir):
         print(f"asset资源已复制到: {asset_target}")
     else:
         print(f"警告：源asset目录 {asset_source} 不存在，跳过复制")
+
 def copy_resources(input_dir, output_dir):    
     # 复制文件资源目录
     resource_source = pathlib.Path(input_dir) / "_resources"
@@ -336,6 +346,7 @@ def safe_rmtree(path, ignore_func):
         # 删除目录
         for name in dirs:
             shutil.rmtree(os.path.join(root, name))
+
 def main(input_dir=".", output_dir="html_output"):
     """主处理函数"""
     root_dir = pathlib.Path(input_dir).resolve()
